@@ -11,6 +11,8 @@ import io.github.chrislo27.toolboks.desktop.ToolboksDesktopLauncher3
 import io.github.chrislo27.toolboks.lazysound.LazySound
 import io.github.chrislo27.toolboks.logging.Logger
 import java.io.File
+import java.nio.file.Paths
+import java.nio.file.StandardCopyOption
 import java.util.Locale
 
 object DesktopLauncher {
@@ -73,6 +75,13 @@ object DesktopLauncher {
             prefFileRecovery.copyTo(File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/prefs/RHREFRESH-recovery"))
             prefFile.delete()
             prefFileRecovery.delete()
+        }
+        //Moves the SFXDB to its rightful place
+        if(File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
+            val target = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/")
+            val source = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}")
+            source.copyRecursively(target)
+            source.deleteRecursively()
         }
 
         val app = RHREfreshApplication(logger, File(if (portable) "$RHREFRESH_FOLDER/logs/" else System.getProperty("user.home") + "/$RHREFRESH_FOLDER/logs/"))
