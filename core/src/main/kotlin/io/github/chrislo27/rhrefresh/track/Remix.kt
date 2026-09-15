@@ -154,8 +154,10 @@ open class Remix(val main: RHREfreshApplication)
         fun fromJson(tree: ObjectNode, remix: Remix, preloadSounds: Boolean): RemixLoadInfo {
             remix.version = Version.fromString(tree["version"].asText())
             remix.databaseVersion = tree["databaseVersion"].asInt(-1)
-            remix.databaseVersionCommit = tree["databaseVersionCommit"].asText("")
-            remix.wasDevBranch = tree["wasDevBranch"].asBoolean(false)
+            if(tree.has("databaseVersionCommit")){
+                remix.databaseVersionCommit = tree["databaseVersionCommit"].asText("")
+                remix.wasDevBranch = tree["wasDevBranch"].asBoolean(false)
+            }
 
             remix.playbackStart = tree["playbackStart"]?.floatValue() ?: 0f
             remix.musicStartSec = tree["musicStartSec"]?.floatValue() ?: 0f
