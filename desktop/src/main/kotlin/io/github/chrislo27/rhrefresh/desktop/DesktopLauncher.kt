@@ -29,6 +29,7 @@ object DesktopLauncher {
         RHREfresh.launchArguments = args.toList()
         val RHREFRESH_FOLDER:String
         val osName: String = System.getProperty("os.name", "???")?.toLowerCase(Locale.ROOT) ?: "???"
+        println("OS name is \"$osName\"")
         if(osName.startsWith("linux")){
             RHREFRESH_FOLDER = ".config/RHREfresh"
         } else if(osName.contains("win")){
@@ -77,12 +78,14 @@ object DesktopLauncher {
                 legacyFolder.copyRecursively(newFolder)
                 File("${RHREFRESH_EXTERNAL_FOLDER}/customSounds").deleteRecursively()
             }
-            val prefFile = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3")
-            val prefFileRecovery = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3-recovery")
-            prefFile.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH"))
-            prefFileRecovery.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH-recovery"))
-            prefFile.delete()
-            prefFileRecovery.delete()
+            if(!File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH").exists()){
+                val prefFile = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3")
+                val prefFileRecovery = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3-recovery")
+                prefFile.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH"))
+                prefFileRecovery.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH-recovery"))
+                prefFile.delete()
+                prefFileRecovery.delete()
+            }
         }
         //Moves the SFXDB to its rightful place
         if(!portable && File("${RHREFRESH_EXTERNAL_FOLDER}/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
