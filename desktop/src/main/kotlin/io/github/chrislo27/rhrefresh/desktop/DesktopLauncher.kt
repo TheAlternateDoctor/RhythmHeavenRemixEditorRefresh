@@ -77,9 +77,14 @@ object DesktopLauncher {
             prefFileRecovery.delete()
         }
         //Moves the SFXDB to its rightful place
-        if(File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
+        if(!portable && File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
             val target = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/")
             val source = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}")
+            source.copyRecursively(target)
+            source.deleteRecursively()
+        } else if(portable && File("/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
+            val target = File("/$RHREFRESH_FOLDER/sfx/")
+            val source = File("/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}")
             source.copyRecursively(target)
             source.deleteRecursively()
         }
