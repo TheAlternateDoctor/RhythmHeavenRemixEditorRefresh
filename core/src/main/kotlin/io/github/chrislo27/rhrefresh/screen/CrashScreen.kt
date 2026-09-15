@@ -26,10 +26,32 @@ class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val last
 
     companion object {
         private val splashes: List<Splash> = listOf(
+                Splash("Rhythm League notes:", "You crashed near the end."),
+
+                Splash("Hey baby, how's it going?", "Not very well."),
+                Splash("Yo, it's crash time, huh?", "Maybe so, huh?"),
+                Splash("Wot!", "The program fell in a hole.", 1.5f),
+                Splash("And the correct response is...", "Aww, too bad! The program has crashed."),
+
                 Splash("S-crash-o, hey!", "I don't think you wanted the program to break (c'mon, ooh)."),
+                Splash("AAAAAAAAAAAAAAAAAA", "Together now!"),
+                Splash("It leaves me on my own,", "Oh, what can I do?"),
+                Splash("Crash inbound!", "Don't forget to take a break every once in a while! Ha! Just kidding!"),
+
                 Splash("I'm a broken man...", "...I'm just a shattering storm..."),
-                Splash("Martian: \uE06B\uE06B\uE06B\uE06B  \uE06B\uE06B", "Translator Tom: RHRE has crashed.", 0.85f),
-                Splash("AAAAAAAAAAAAAAAAAA", "Together now!")
+                Splash("You can't do it like that, Mandrill.", "This is even more painful than it looks..."),
+                Splash("Wubba dubba dubba", "Is that a crash?"),
+                Splash("Exported success-BOING!", "Donaiyanen!"),
+
+                Splash("Martian: \uE06B\uE06B\uE06B\uE06B\uE06B  \uE06B\uE06B", "Translator Tom: RHREfresh has crashed.", 0.85f),
+                Splash("One who relies only on Kotlin will...", "Soon crash RHREfresh on something."),
+                Splash("Oh, Tangotronic...", "PLEASE TAKE ME BACK DARLING I CAN DO BETTER 01110"),
+                Splash("Pwaaaaah!", "I was just holding my breath to get rid of the crash."),
+
+                Splash("Ack! Is this a bug?", "The developer tried very hard."),
+                Splash("Chu-pa chu-pa BOW", "You got zapped, huh?"),
+                Splash("ah taka-OW!", "How could just grabbing sticks possibly improve my remixing abilities?"),
+                Splash("Hmm.. there seemed to be a problem with RHREfresh.", "Beep!")
                                                    )
     }
 
