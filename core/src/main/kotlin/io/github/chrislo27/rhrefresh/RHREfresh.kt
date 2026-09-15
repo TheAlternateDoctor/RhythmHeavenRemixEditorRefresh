@@ -42,8 +42,12 @@ object RHREfresh {
                 if (portableMode) {
                     Gdx.files.local(".rhrefresh/")
                 }else{
-                    if(CURRENT_OS == OS.LINUX){
+                    if(CURRENT_OS == OS.LINUX) {
                         Gdx.files.external(".config/RHREfresh/")
+                    }else if(CURRENT_OS == OS.WINDOWS){
+                        Gdx.files.external("AppData/Roaming/RHREfresh/")
+                    }else if(CURRENT_OS == OS.MACOS){
+                        Gdx.files.external("Library/Application Support/RHREfresh/")
                     } else{
                         Gdx.files.external(".rhrefresh/")
                     }

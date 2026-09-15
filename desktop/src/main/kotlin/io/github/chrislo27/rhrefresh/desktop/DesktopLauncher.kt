@@ -31,9 +31,14 @@ object DesktopLauncher {
         val osName: String = System.getProperty("os.name", "???")?.toLowerCase(Locale.ROOT) ?: "???"
         if(osName.startsWith("linux")){
             RHREFRESH_FOLDER = ".config/RHREfresh"
+        } else if(osName.contains("win")){
+            RHREFRESH_FOLDER = "AppData/Roaming/RHREfresh/"
+        } else if(osName.contains("mac")){
+            RHREFRESH_FOLDER = "Library/Application Support/RHREfresh/"
         } else{
             RHREFRESH_FOLDER = ".rhrefresh"
         }
+        val RHREFRESH_EXTERNAL_FOLDER = System.getProperty("user.home") +"/"+ RHREFRESH_FOLDER
 
         val arguments = Arguments()
         val jcommander = JCommander.newBuilder().acceptUnknownOptions(false).addObject(arguments).build()
@@ -58,28 +63,31 @@ object DesktopLauncher {
 
         // Copy the legacy folder over, so that the two can coexist
         // Also copies the key to the new names
-        if(!portable && !File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER").exists()){
+        if(!portable && !File(RHREFRESH_EXTERNAL_FOLDER).exists()){
             val legacyFolder = File(System.getProperty("user.home") + "/.rhre3")
             val legacyAdvFolder = File(System.getProperty("user.home") + "/.rhre3adv")
-            val newFolder = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER")
+            val legacyRefreshFolder = File(System.getProperty("user.home") + "/.rhrefresh")
+            val newFolder = File(RHREFRESH_EXTERNAL_FOLDER)
             newFolder.mkdir()
-            if(legacyAdvFolder.exists()){
+            if(legacyRefreshFolder.exists()){
+                legacyRefreshFolder.copyRecursively(newFolder)
+            }else if(legacyAdvFolder.exists()){
                 legacyAdvFolder.copyRecursively(newFolder)
             } else{
                 legacyFolder.copyRecursively(newFolder)
-                File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/customSounds").deleteRecursively()
+                File("${RHREFRESH_EXTERNAL_FOLDER}/customSounds").deleteRecursively()
             }
-            val prefFile = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/prefs/RHRE3")
-            val prefFileRecovery = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/prefs/RHRE3-recovery")
-            prefFile.copyTo(File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/prefs/RHREFRESH"))
-            prefFileRecovery.copyTo(File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/prefs/RHREFRESH-recovery"))
+            val prefFile = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3")
+            val prefFileRecovery = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3-recovery")
+            prefFile.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH"))
+            prefFileRecovery.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH-recovery"))
             prefFile.delete()
             prefFileRecovery.delete()
         }
         //Moves the SFXDB to its rightful place
-        if(!portable && File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
-            val target = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/")
-            val source = File(System.getProperty("user.home") + "/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}")
+        if(!portable && File("${RHREFRESH_EXTERNAL_FOLDER}/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
+            val target = File("${RHREFRESH_EXTERNAL_FOLDER}/sfx/")
+            val source = File("${RHREFRESH_EXTERNAL_FOLDER}/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}")
             source.copyRecursively(target)
             source.deleteRecursively()
         } else if(portable && File("/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
