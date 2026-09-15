@@ -3,6 +3,7 @@ package io.github.chrislo27.rhrefresh.screen
 import com.badlogic.gdx.Gdx
 import com.badlogic.gdx.Input
 import com.badlogic.gdx.files.FileHandle
+import com.badlogic.gdx.graphics.Color
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Align
@@ -13,7 +14,10 @@ import io.github.chrislo27.rhrefresh.undoredo.ReversibleAction
 import io.github.chrislo27.rhrefresh.stage.GenericStage
 import io.github.chrislo27.rhrefresh.stage.LoadingIcon
 import io.github.chrislo27.rhrefresh.track.MusicData
+import io.github.chrislo27.rhrefresh.track.PlayState
 import io.github.chrislo27.rhrefresh.track.Remix
+import io.github.chrislo27.rhrefresh.track.tracker.TrackerValueChange
+import io.github.chrislo27.rhrefresh.track.tracker.tempo.TempoChange
 import io.github.chrislo27.rhrefresh.util.*
 import io.github.chrislo27.rhrefresh.util.err.MusicLoadingException
 import io.github.chrislo27.toolboks.ToolboksScreen
@@ -40,6 +44,13 @@ class MusicSelectScreen(main: RHREfreshApplication)
     private var isLoading = false
     private val mainLabel: TextLabel<MusicSelectScreen>
     private val moveMusicStartButton: Button<MusicSelectScreen>
+    private val tempoField: TextField<MusicSelectScreen>
+    private val tempoFieldLabel: TextLabel<MusicSelectScreen>
+    private val tempoFieldUnit: TextLabel<MusicSelectScreen>
+    private var globalTempoChangeId: Float = 0f
+    private val musicStartField: TextField<MusicSelectScreen>
+    private val musicStartFieldLabel: TextLabel<MusicSelectScreen>
+    private val musicStartFieldUnit: TextLabel<MusicSelectScreen>
 
     init {
         stage.titleIcon.image = TextureRegion(AssetRegistry.get<Texture>("ui_icon_music_button"))
@@ -69,6 +80,8 @@ class MusicSelectScreen(main: RHREfreshApplication)
                 val remix = editor.remix
                 val start = remix.music?.music?.getStartOfSound() ?: -1f
                 if (start >= 0f && remix.musicStartSec != -start.absoluteValue) {
+
+                    musicStartField.text = (-(start.absoluteValue)*1000).toInt().toString()
                     remix.mutate(object : ReversibleAction<Remix> {
                         private val oldMusicStart = remix.musicStartSec
                         private val newMusicStart = -(start.absoluteValue)
@@ -126,6 +139,77 @@ class MusicSelectScreen(main: RHREfreshApplication)
             this.location.set(screenHeight = 0.125f, screenY = 0.125f / 2f)
         }
 
+        tempoField = object: TextField<MusicSelectScreen>(palette, stage.centreStage, stage.centreStage){
+            override fun onTextChange(oldText: String) {
+                super.onTextChange(oldText)
+                try{
+                    val oldChange = editor.remix.tempos.map[globalTempoChangeId]!!
+                    val newTempo = TempoChange(editor.remix.tempos, oldChange.beat, text.toFloat(), oldChange.swing, oldChange.width, true)
+                    editor.remix.mutate(TrackerValueChange(oldChange, newTempo))
+                } catch(e:Exception){
+                    //We just ignore, the user is probably in the middle of typing
+                }
+            }
+        }.apply {
+            for(tempoChange in editor.remix.tempos.map){
+                if(tempoChange.value.immutable){
+                    globalTempoChangeId = tempoChange.key as Float
+                    this.text = tempoChange.value.bpm.toString()
+                }
+            }
+            this.background = true
+            this.visible = false
+            this.location.set(screenX = 0.25f, screenWidth = 0.24f, screenHeight = 0.10f)
+        }
+        stage.centreStage.elements += tempoField
+        tempoFieldUnit = TextLabel(palette, stage.centreStage, stage.centreStage).apply{
+            this.text = "bpm" //TODO swap to localization
+            this.textColor = Color.GRAY
+            this.textAlign = Align.right
+            this.visible = false
+            this.location.set(screenX = 0.25f, screenWidth = 0.23f, screenHeight = 0.10f)
+        }
+        stage.centreStage.elements += tempoFieldUnit
+        tempoFieldLabel = TextLabel(palette, stage.centreStage, stage.centreStage).apply{
+            this.text = "Tempo start:" //TODO swap to localization
+            this.textAlign = Align.left
+            this.visible = false
+            this.location.set(screenX = 0.25f, screenY = 0.10f, screenWidth = 0.24f, screenHeight = 0.10f)
+        }
+        stage.centreStage.elements += tempoFieldLabel
+
+        musicStartField = object: TextField<MusicSelectScreen>(palette, stage.centreStage, stage.centreStage){
+            override fun onTextChange(oldText: String) {
+                super.onTextChange(oldText)
+                try{
+                    editor.remix.musicStartSec = (text.toFloat())/1000
+                } catch(e:Exception){
+                    //We just ignore, the user is probably in the middle of typing
+                }
+            }
+        }.apply {
+            this.text = (editor.remix.musicStartSec*1000).toInt().toString()
+            this.background = true
+            this.visible = false
+            this.location.set(screenX = 0.51f, screenWidth = 0.24f, screenHeight = 0.10f)
+        }
+        stage.centreStage.elements += musicStartField
+        musicStartFieldUnit = TextLabel(palette, stage.centreStage, stage.centreStage).apply{
+            this.text = "ms" //TODO swap to localization
+            this.textColor = Color.GRAY
+            this.textAlign = Align.right
+            this.visible = false
+            this.location.set(screenX = 0.51f, screenWidth = 0.23f, screenHeight = 0.10f)
+        }
+        stage.centreStage.elements += musicStartFieldUnit
+        musicStartFieldLabel = TextLabel(palette, stage.centreStage, stage.centreStage).apply{
+            this.text = "Music start:" //TODO swap to localization
+            this.textAlign = Align.left
+            this.visible = false
+            this.location.set(screenX = 0.51f, screenY = 0.10f, screenWidth = 0.24f, screenHeight = 0.10f)
+        }
+        stage.centreStage.elements += musicStartFieldLabel
+
         stage.updatePositions()
         updateLabels(null)
     }
@@ -176,6 +260,12 @@ class MusicSelectScreen(main: RHREfreshApplication)
         if (throwable == null) {
             val music = editor.remix.music
             if (isLoading) {
+                tempoField.visible = false
+                tempoFieldUnit.visible = false
+                tempoFieldLabel.visible = false
+                musicStartField.visible = false
+                musicStartFieldUnit.visible = false
+                musicStartFieldLabel.visible = false
                 label.text = Localization["screen.music.loadingMusic"]
             } else {
                 label.text = Localization["screen.music.currentMusic",
@@ -185,8 +275,25 @@ class MusicSelectScreen(main: RHREfreshApplication)
                     if (start >= 0f) {
                         label.text += "\n\n${Localization["screen.music.estimatedMusicStart", (Editor.TRACKER_MINUTES_FORMATTER.format((start / 60).toLong()) + ":" + Editor.TRACKER_TIME_FORMATTER.format(start % 60.0))]}"
                     }
+                    tempoField.visible = true
+                    tempoFieldUnit.visible = true
+                    tempoFieldLabel.visible = true
+                    musicStartField.visible = true
+                    musicStartFieldUnit.visible = true
+                    musicStartFieldLabel.visible = true
+                    tempoField.text = editor.remix.tempos.map[globalTempoChangeId]!!.bpm.toString()
+                    musicStartField.text = (editor.remix.musicStartSec*1000).toInt().toString()
+                } else{
+                    tempoField.visible = false
+                    tempoFieldUnit.visible = false
+                    tempoFieldLabel.visible = false
+                    musicStartField.visible = false
+                    musicStartFieldUnit.visible = false
+                    musicStartFieldLabel.visible = false
                 }
             }
+
+
 //            if (music != null) {
 //                if (music.handle.extension().equals("wav", true)) {
 //                    label.text += "\n\n${Localization["screen.music.warning.wav"]}"
