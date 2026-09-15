@@ -3,8 +3,8 @@ package io.github.chrislo27.rhrefresh
 
 object PreferenceKeys {
 
-    private val DATABASE_VERSION = "databaseVersion"
-    val DATABASE_VERSION_BRANCH = "${DATABASE_VERSION}_${RHREfresh.DATABASE_BRANCH}"
+    val DATABASE_VERSION = "databaseVersion_"
+    val DATABASE_VERSION_COMMIT = "_commit"
     val THEME_INDEX = "themeIndex"
     val THEME_USES_MENU = "themeUsesMenu"
     val LANG_INDEX = "languageIndex"
@@ -45,9 +45,10 @@ object PreferenceKeys {
     val ADVOPT_PITCH_STYLE = "advOpt_pitchStyle"
     val ADVOPT_EXPLODING_ENTITIES = "advOpt_explodingEntities"
     val ADVOPT_IGNORE_PITCH_RESTRICTIONS = "advOpt_ignorePitchRestrictions"
+    val ADVOPT_SFXDB_USE_DEV_BRANCH = "advOpt_sfxDbUseDevBranch"
 
     val allAdvOptsKeys: List<String> =
-            listOf(ADVOPT_REF_RH_GAME, ADVOPT_PITCH_STYLE, ADVOPT_EXPLODING_ENTITIES, ADVOPT_IGNORE_PITCH_RESTRICTIONS)
+            listOf(ADVOPT_REF_RH_GAME, ADVOPT_PITCH_STYLE, ADVOPT_EXPLODING_ENTITIES, ADVOPT_IGNORE_PITCH_RESTRICTIONS, ADVOPT_SFXDB_USE_DEV_BRANCH)
 
     val FILE_CHOOSER_MUSIC = "fileChooser_musicSelect"
     val FILE_CHOOSER_SAVE = "fileChooser_save"

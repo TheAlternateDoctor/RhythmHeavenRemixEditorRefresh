@@ -571,7 +571,7 @@ object SFXDatabase : Disposable {
             val playalongObjs = mutableListOf<Datamodel>()
             val playalongGame = Game(PLAYALONG_GAME_ID, "Playalong Input Entities", specialGame.series,
                                      playalongObjs, Gdx.files.internal("images/gameicon/playable_entities.png"),
-                                     null, "Playalong", false, specialGame.priority, -2,
+                                     null, "Playalong", false, specialGame.priority, -4,
                                      false, specialGame.noDisplay, listOf("playable", "playing", "play-along"), false, true)
             checkGameDoesNotExist(PLAYALONG_GAME_ID)
             // Press

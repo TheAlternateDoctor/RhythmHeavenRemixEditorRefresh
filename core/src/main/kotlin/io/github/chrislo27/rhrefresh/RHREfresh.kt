@@ -64,13 +64,10 @@ object RHREfresh {
     const val GITHUB_SHORTLINK: String = "https://rhre.dev"
     const val DATABASE_URL: String = "https://github.com/TheAlternateDoctor/RHRE-database.git"
     const val DONATION_URL: String = "https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VA45DPLCC4958"
-    val DEV_DATABASE_BRANCH: String = "prototype"
+    val DEV_DATABASE_BRANCH: String = "dev"
     val MASTER_DATABASE_BRANCH: String = "master"
-    val DATABASE_BRANCH: String = if (VERSION.suffix.startsWith("DEV")) {
-        DEV_DATABASE_BRANCH
-    } else {
-        MASTER_DATABASE_BRANCH
-    }
+    var DATABASE_BRANCH: String = MASTER_DATABASE_BRANCH
+    var DATABASE_CURRENT_COMMIT: String = ""
     val DATABASE_CURRENT_VERSION: String = "https://raw.githubusercontent.com/TheAlternateDoctor/RHRE-database/$DATABASE_BRANCH/current.json"
     const val DATABASE_RELEASES = "https://github.com/TheAlternateDoctor/RHRE-database/releases"
     const val RELEASE_API_URL = "https://api.github.com/repos/TheAlternateDoctor/RhythmHeavenRemixEditor/releases/latest"

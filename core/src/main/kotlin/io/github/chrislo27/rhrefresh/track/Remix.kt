@@ -85,6 +85,9 @@ open class Remix(val main: RHREfreshApplication)
             remix.apply {
                 tree.put("version", RHREfresh.VERSION.toString())
                 tree.put("databaseVersion", SFXDatabase.data.version)
+                tree.put("databaseVersionCommit", RHREfresh.DATABASE_CURRENT_COMMIT)
+                tree.put("wasDevBranch", RHREfresh.DATABASE_BRANCH == RHREfresh.DEV_DATABASE_BRANCH)
+
 
                 tree.put("playbackStart", playbackStart)
                 tree.put("musicStartSec", musicStartSec)
@@ -151,6 +154,8 @@ open class Remix(val main: RHREfreshApplication)
         fun fromJson(tree: ObjectNode, remix: Remix, preloadSounds: Boolean): RemixLoadInfo {
             remix.version = Version.fromString(tree["version"].asText())
             remix.databaseVersion = tree["databaseVersion"].asInt(-1)
+            remix.databaseVersionCommit = tree["databaseVersionCommit"].asText("")
+            remix.wasDevBranch = tree["wasDevBranch"].asBoolean(false)
 
             remix.playbackStart = tree["playbackStart"]?.floatValue() ?: 0f
             remix.musicStartSec = tree["musicStartSec"]?.floatValue() ?: 0f
@@ -603,6 +608,10 @@ open class Remix(val main: RHREfreshApplication)
     var version: Version = RHREfresh.VERSION
         private set
     var databaseVersion: Int = -1
+        private set
+    var databaseVersionCommit: String = ""
+        private set
+    var wasDevBranch: Boolean = false
         private set
 
     val entities: List<Entity> = mutableListOf()

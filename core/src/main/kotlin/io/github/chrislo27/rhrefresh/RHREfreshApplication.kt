@@ -258,6 +258,13 @@ class RHREfreshApplication(logger: Logger, logToFile: File?)
         preferences = Gdx.app.getPreferences("RHREFRESH")
         RHREfresh.PREFERENCES = preferences
         Toolboks.LOGGER.info("Loaded preferences")
+
+        RHREfresh.DATABASE_BRANCH = if(preferences.getBoolean(PreferenceKeys.ADVOPT_SFXDB_USE_DEV_BRANCH)){
+            "dev"
+        } else{
+            "master"
+        }
+        RHREfresh.DATABASE_CURRENT_COMMIT = preferences.getString(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH+PreferenceKeys.DATABASE_VERSION_COMMIT, "")
         
         GlobalScope.launch {
             Toolboks.LOGGER.info("Starting analytics")

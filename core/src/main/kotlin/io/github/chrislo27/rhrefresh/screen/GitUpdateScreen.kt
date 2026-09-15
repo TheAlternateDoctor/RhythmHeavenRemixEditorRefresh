@@ -93,11 +93,14 @@ class GitUpdateScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfreshAppl
         repoStatus = RepoStatus.UNKNOWN
         coroutine = GlobalScope.launch {
             repoStatus = RepoStatus.DOING
-            val lastVersion = main.preferences.getInteger(PreferenceKeys.DATABASE_VERSION_BRANCH, -1)
-            main.preferences.putInteger(PreferenceKeys.DATABASE_VERSION_BRANCH, -1).flush()
+            val lastVersion = main.preferences.getInteger(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH, -1)
+            val lastCommit = main.preferences.getString(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH+PreferenceKeys.DATABASE_VERSION_COMMIT, "")
+            main.preferences.putInteger(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH, -1).flush()
+            main.preferences.putString(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH+PreferenceKeys.DATABASE_VERSION_COMMIT, "").flush()
 
             fun restoreDatabaseVersion() {
-                main.preferences.putInteger(PreferenceKeys.DATABASE_VERSION_BRANCH, lastVersion).flush()
+                main.preferences.putInteger(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH, lastVersion).flush()
+                main.preferences.putString(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH+PreferenceKeys.DATABASE_VERSION_COMMIT, lastCommit).flush()
             }
 
             try {
@@ -125,7 +128,7 @@ class GitUpdateScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfreshAppl
                     }
                 }
                 // Doing weird stuff to update, yippee
-                if(RHREfresh.RHREFRESH_FOLDER.child("sfx/${RHREfresh.DATABASE_BRANCH}/.git").exists() && main.preferences.getInteger(PreferenceKeys.DATABASE_VERSION_BRANCH) < 139){
+                if(RHREfresh.RHREFRESH_FOLDER.child("sfx/${RHREfresh.DATABASE_BRANCH}/.git").exists() && main.preferences.getInteger(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH) < 139){
                     var gitConfig = RHREfresh.RHREFRESH_FOLDER.child("sfx/${RHREfresh.DATABASE_BRANCH}/.git/config").readString()
                     gitConfig = gitConfig.replace("chrislo27","TheAlternateDoctor")
                     RHREfresh.RHREFRESH_FOLDER.child("sfx/${RHREfresh.DATABASE_BRANCH}/.git/config").writeString(gitConfig, false)
@@ -140,7 +143,10 @@ class GitUpdateScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfreshAppl
                     if (obj.version < 0)
                         error("Current database version json object has a negative version of ${obj.version}")
 
-                    main.preferences.putInteger(PreferenceKeys.DATABASE_VERSION_BRANCH, obj.version).flush()
+                    val commit = GitHelper.getLastCommit().substring(0,7)
+                    main.preferences.putInteger(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH, obj.version).flush()
+                    main.preferences.putString(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH+PreferenceKeys.DATABASE_VERSION_COMMIT, commit).flush()
+                    RHREfresh.DATABASE_CURRENT_COMMIT = commit
                 }
 
                 val time = (System.nanoTime() - nano) / 1_000_000.0
@@ -167,7 +173,7 @@ class GitUpdateScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfreshAppl
                 }
                 repoStatus = RepoStatus.ERROR
                 label.text = Localization["screen.database.error"]
-                main.preferences.putInteger(PreferenceKeys.DATABASE_VERSION_BRANCH, -1).flush()
+                main.preferences.putInteger(PreferenceKeys.DATABASE_VERSION+ RHREfresh.DATABASE_BRANCH, -1).flush()
             }
         }
     }

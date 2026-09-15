@@ -16,6 +16,7 @@ import io.github.chrislo27.rhrefresh.RHREfresh
 import io.github.chrislo27.rhrefresh.RHREfreshApplication
 import io.github.chrislo27.rhrefresh.RemixRecovery
 import io.github.chrislo27.rhrefresh.analytics.AnalyticsHandler
+import io.github.chrislo27.rhrefresh.git.GitHelper
 import io.github.chrislo27.rhrefresh.modding.ModdingGame
 import io.github.chrislo27.rhrefresh.modding.ModdingUtils
 import io.github.chrislo27.rhrefresh.sfxdb.SFXDatabase
@@ -45,12 +46,15 @@ class AdvancedOptionsScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfre
     private val preferences: Preferences
         get() = main.preferences
     private var didChangeSettings: Boolean = false
+    private var didChangeSfxDbPreferences: Boolean = false
 
     private val moddingGameLabel: TextLabel<AdvancedOptionsScreen>
     private val moddingGameWarningLabel: TextLabel<AdvancedOptionsScreen>
+    private val sfxDbWarningLabel: TextLabel<AdvancedOptionsScreen>
     private var seconds = 0f
 
     private val reloadMetadataButton: Button<AdvancedOptionsScreen>
+    private val switchSFXDBButton: Button<AdvancedOptionsScreen>
 
     init {
         val palette = main.uiPalette
@@ -61,7 +65,11 @@ class AdvancedOptionsScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfre
         stage.titleLabel.text = "Advanced Options"
         stage.backButton.visible = true
         stage.onBackButtonClick = {
-            main.screen = ScreenRegistry.getNonNull("info")
+            if(didChangeSfxDbPreferences){
+                main.screen = ScreenRegistry.getNonNull("databaseUpdate")
+            } else{
+                main.screen = ScreenRegistry.getNonNull("info")
+            }
         }
 
         val bottom = stage.bottomStage
@@ -230,8 +238,8 @@ class AdvancedOptionsScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfre
                               screenHeight = buttonHeight)
         }
         centre.elements += reloadMetadataButton
-        // Open containing folder for modding metadata
 
+        // Open containing folder for modding metadata
         if(RHREfresh.CURRENT_OS != RHREfresh.OS.MACOS) {
             centre.elements += Button(palette, centre, centre).apply {
                 val width = buttonWidth * 0.09f
@@ -343,6 +351,60 @@ class AdvancedOptionsScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfre
                               screenHeight = buttonHeight * 0.2f)
         }
 
+        // Change SFXDB update path
+        switchSFXDBButton = object : Button<AdvancedOptionsScreen>(palette, centre, centre) {
+            private val textLabel: TextLabel<AdvancedOptionsScreen>
+                get() = labels.first() as TextLabel
+
+            override fun onLeftClick(xPercent: Float, yPercent: Float) {
+                super.onLeftClick(xPercent, yPercent)
+                if(main.preferences.getBoolean(PreferenceKeys.ADVOPT_SFXDB_USE_DEV_BRANCH)){
+                    //Switching to RELEASE
+                    main.preferences.putBoolean(PreferenceKeys.ADVOPT_SFXDB_USE_DEV_BRANCH, false)
+                    RHREfresh.DATABASE_BRANCH = RHREfresh.MASTER_DATABASE_BRANCH
+                    textLabel.text = "Change SFXDB update path (currently RELEASE)"
+                    GitHelper.switchBranch("origin/"+RHREfresh.MASTER_DATABASE_BRANCH)
+                } else {
+                    //Switching to DEV
+                    main.preferences.putBoolean(PreferenceKeys.ADVOPT_SFXDB_USE_DEV_BRANCH, true)
+                    RHREfresh.DATABASE_BRANCH = RHREfresh.DEV_DATABASE_BRANCH
+                    textLabel.text = "Change SFXDB update path (currently DEV)"
+                    GitHelper.switchBranch("origin/"+RHREfresh.DEV_DATABASE_BRANCH)
+                }
+                didChangeSfxDbPreferences = true
+            }
+        }.apply {
+            this.addLabel(TextLabel(palette, this, this.stage).apply {
+                this.isLocalizationKey = false
+                this.textWrapping = false
+                this.fontScaleMultiplier = 0.8f
+                this.text = if(main.preferences.getBoolean(PreferenceKeys.ADVOPT_SFXDB_USE_DEV_BRANCH)){
+                    "Change SFXDB update path (currently DEV)"
+                } else{
+                    "Change SFXDB update path (currently RELEASE)"
+                }
+            })
+
+            this.location.set(screenX = 1f - (padding + buttonWidth),
+                screenY = padding * 8 + buttonHeight * 7,
+                screenWidth = buttonWidth,
+                screenHeight = buttonHeight)
+        }
+        centre.elements += switchSFXDBButton
+
+        sfxDbWarningLabel = TextLabel(palette, centre, centre).apply {
+            this.isLocalizationKey = false
+            this.text = "[YELLOW]Caution:[] Leaving this screen after\nchanging this setting will\nprompt an SFXDB update!"
+            this.textWrapping = false
+            this.fontScaleMultiplier = 0.85f
+            this.textAlign = Align.top or Align.center
+            this.location.set(screenX = 1f - (padding + buttonWidth),
+                screenY = padding * 7 + buttonHeight * 6,
+                screenWidth = buttonWidth,
+                screenHeight = buttonHeight)
+        }
+        centre.elements += sfxDbWarningLabel
+
         updateLabels()
     }
 
@@ -388,6 +450,7 @@ class AdvancedOptionsScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfre
         }
 
         didChangeSettings = false
+        didChangeSfxDbPreferences = false
     }
 
     override fun show() {

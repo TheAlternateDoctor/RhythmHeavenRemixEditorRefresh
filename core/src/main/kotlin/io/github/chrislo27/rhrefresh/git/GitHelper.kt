@@ -18,7 +18,7 @@ import java.net.URL
 object GitHelper {
 
     val SOUNDS_DIR: FileHandle by lazy {
-        RHREfresh.RHREFRESH_FOLDER.child("sfx/${RHREfresh.DATABASE_BRANCH}/").apply { mkdirs() }
+        RHREfresh.RHREFRESH_FOLDER.child("sfx/").apply { mkdirs() }
     }
 
     fun makeRepositoryBuilder(mustExist: Boolean = false): RepositoryBuilder =
@@ -122,4 +122,16 @@ object GitHelper {
         }
     }
 
+    //Returns the commit ID of the last commit
+    fun getLastCommit(): String{
+        return temporarilyUseRepo {
+            Git(this).log().call().first().name
+        }
+    }
+
+    fun switchBranch(branch: String){
+        return temporarilyUseRepo {
+            Git(this).checkout().setName(branch).call()
+        }
+    }
 }
