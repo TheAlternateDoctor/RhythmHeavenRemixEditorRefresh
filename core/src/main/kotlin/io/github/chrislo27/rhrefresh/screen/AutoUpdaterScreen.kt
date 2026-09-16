@@ -29,6 +29,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.PrintWriter
 import java.io.StringWriter
+import java.security.MessageDigest
 import kotlin.math.roundToLong
 import kotlin.system.exitProcess
 
@@ -162,7 +163,9 @@ class AutoUpdaterScreen(main: RHREfreshApplication)
                 }
                 val zipUrl = assetNode["browser_download_url"].asText()
                 val filesize = assetNode["size"].asLong(1L).coerceAtLeast(1L)
-                
+                val digestMethod = assetNode["digest"].asText().split(":").first()
+                val digestHash = assetNode["digest"].asText().split(":").last()
+
                 val zipFileLoc = updaterFolder.resolve("RHRE_archive.zip").apply {
                     createNewFile()
                 }
@@ -196,7 +199,7 @@ class AutoUpdaterScreen(main: RHREfreshApplication)
                                 }
                                 return super.onContentWriteProgress(amount, current, total)
                             }
-                            
+
                             override fun onBodyPartReceived(content: HttpResponseBodyPart): AsyncHandler.State {
                                 fileStream.channel.write(content.bodyByteBuffer)
                                 val amount = content.length()
@@ -224,6 +227,13 @@ class AutoUpdaterScreen(main: RHREfreshApplication)
                             }
                         }).get()
                 fileStream.close()
+
+                val md = MessageDigest.getInstance("SHA-256")
+                val sha256 = md.digest(zipFileLoc.readBytes()).fold("") { str, it -> str + "%02x".format(it) }
+                if(sha256 != digestHash){
+                    throw Exception("SHA256 of downloaded file is different from the one reported by Github.")
+                }
+
                 Gdx.app.postRunnable {
                     progress = Progress.EXTRACTING
                     label.text = Localization["screen.autoUpdater.progress.extractingArchive"]
