@@ -74,11 +74,11 @@ object DesktopLauncher {
                 legacyRefreshFolder.copyRecursively(newFolder)
             }else if(legacyAdvFolder.exists()){
                 legacyAdvFolder.copyRecursively(newFolder)
-            } else{
+            } else if(legacyFolder.exists()){
                 legacyFolder.copyRecursively(newFolder)
                 File("${RHREFRESH_EXTERNAL_FOLDER}/customSounds").deleteRecursively()
             }
-            if(!File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH").exists()){
+            if(!File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH").exists() && File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3").exists()){
                 val prefFile = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3")
                 val prefFileRecovery = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3-recovery")
                 prefFile.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH"))
