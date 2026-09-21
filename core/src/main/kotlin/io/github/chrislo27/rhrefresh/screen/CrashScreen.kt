@@ -26,32 +26,32 @@ class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val last
 
     companion object {
         private val splashes: List<Splash> = listOf(
-                Splash("Rhythm League notes:", "You crashed near the end."),
+                Splash("Rhythm League notes:", "You crashed near the end.", 0.85f),
 
-                Splash("Hey baby, how's it going?", "Not very well."),
-                Splash("Yo, it's crash time, huh?", "Maybe so, huh?"),
+                Splash("Hey baby, how's it going?", "Not very well.", 0.75f),
+                Splash("Yo, it's crash time, huh?", "Maybe so, huh?", 0.8f),
                 Splash("Wot!", "The program fell in a hole.", 1.5f),
-                Splash("And the correct response is...", "Aww, too bad! The program has crashed."),
+                Splash("And the correct response is...", "Aww, too bad! The program has crashed.",0.7f),
 
                 Splash("S-crash-o, hey!", "I don't think you wanted the program to break (c'mon, ooh)."),
                 Splash("AAAAAAAAAAAAAAAAAA", "Together now!"),
-                Splash("It leaves me on my own,", "Oh, what can I do?"),
+                Splash("It leaves me on my own,", "Oh, what can I do?", 0.85f),
                 Splash("Crash inbound!", "Don't forget to take a break every once in a while! Ha! Just kidding!"),
 
                 Splash("I'm a broken man...", "...I'm just a shattering storm..."),
-                Splash("You can't do it like that, Mandrill.", "This is even more painful than it looks..."),
+                Splash("You can't do it like that, Mandrill.", "This is even more painful than it looks...", 0.6f),
                 Splash("Wubba dubba dubba", "Is that a crash?"),
-                Splash("Exported success-BOING!", "Donaiyanen!"),
+                Splash("Exported success-BOING!", "Donaiyanen!", 0.8f),
 
-                Splash("Martian: \uE06B\uE06B\uE06B\uE06B\uE06B  \uE06B\uE06B", "Translator Tom: RHREfresh has crashed.", 0.85f),
-                Splash("One who relies only on Kotlin will...", "Soon crash RHREfresh on something."),
+                Splash("Martian: \uE06B\uE06B\uE06B\uE06B\uE06B  \uE06B\uE06B", "Translator Tom: RHREfresh has crashed.", 0.75f),
+                Splash("One who relies only on Kotlin will...", "Soon crash RHREfresh on something.", 0.55f),
                 Splash("Oh, Tangotronic...", "PLEASE TAKE ME BACK DARLING I CAN DO BETTER 01110"),
                 Splash("Pwaaaaah!", "I was just holding my breath to get rid of the crash."),
 
                 Splash("Ack! Is this a bug?", "The developer tried very hard."),
-                Splash("Chu-pa chu-pa BOW", "You got zapped, huh?"),
+                Splash("Chu-pa chu-pa BOW!", "You got crashed, huh?",0.95f),
                 Splash("ah taka-OW!", "How could just grabbing sticks possibly improve my remixing abilities?"),
-                Splash("Hmm.. there seemed to be a problem with RHREfresh.", "Beep!")
+                Splash("Hmm.. there seemed to be\na problem with RHREfresh.", "Beep!", 0.6f)
                                                    )
     }
 
@@ -77,12 +77,13 @@ class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val last
         }
         try {
             val icon = Texture("images/icon/crash_icon.png")
+            icon.setFilter(Texture.TextureFilter.Linear,Texture.TextureFilter.Linear)
             crashIcon = icon
             stage.elements += ImageLabel(palette, stage, stage).apply {
                 this.image = TextureRegion(icon)
                 this.renderType = ImageLabel.ImageRendering.ASPECT_RATIO
-                this.location.set(screenX = 0.1f, screenY = 0.9f, screenWidth = 0f, screenHeight = 0f,
-                                  pixelWidth = 128f, pixelHeight = 128f, pixelX = -64f, pixelY = -64f)
+                this.location.set(screenX = -0.025f, screenY = 0.725f, screenWidth = .25f, screenHeight = 0.25f)
+//                                  pixelWidth = 128f, pixelHeight = 128f, pixelX = -64f, pixelY = -64f)
             }
         } catch (e: Exception) {
             e.printStackTrace()
