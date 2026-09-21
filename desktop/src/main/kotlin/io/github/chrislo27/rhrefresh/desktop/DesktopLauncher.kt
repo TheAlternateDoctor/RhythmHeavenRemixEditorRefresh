@@ -64,7 +64,7 @@ object DesktopLauncher {
 
         // Copy the legacy folder over, so that the two can coexist
         // Also copies the key to the new names
-        if(!portable && !File(RHREFRESH_EXTERNAL_FOLDER).exists()){
+        if(!portable && !File(RHREFRESH_EXTERNAL_FOLDER).exists() && File(System.getProperty("user.home") + "/.rhre3").exists()){
             val legacyFolder = File(System.getProperty("user.home") + "/.rhre3")
             val legacyAdvFolder = File(System.getProperty("user.home") + "/.rhre3adv")
             val legacyRefreshFolder = File(System.getProperty("user.home") + "/.rhrefresh")
