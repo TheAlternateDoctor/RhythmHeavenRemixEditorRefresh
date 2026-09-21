@@ -270,8 +270,11 @@ class OpenRemixScreen(main: RHREfreshApplication)
                 if ((wasDevBranch && !main.preferences.getBoolean(PreferenceKeys.ADVOPT_SFXDB_USE_DEV_BRANCH, false))
                     && RHREfresh.DATABASE_CURRENT_COMMIT != remix.databaseVersionCommit){
                     mainLabel.text += "\n\n" + Localization["screen.open.devDatabase"]
+                } else if ((wasDevBranch && main.preferences.getBoolean(PreferenceKeys.ADVOPT_SFXDB_USE_DEV_BRANCH, false))
+                    && RHREfresh.DATABASE_CURRENT_COMMIT != remix.databaseVersionCommit){
+                    mainLabel.text += "\n\n" + Localization["screen.open.differentCommit"]
                 }
-                if (SFXDatabase.data.version < remix.databaseVersion) {
+                if (SFXDatabase.data.version < remix.databaseVersion)  {
                     mainLabel.text += "\n\n" + Localization["screen.open.oldDatabase"]
                 } else if (remix.version < RHREfresh.VERSION) {
                     mainLabel.text += "\n\n" +
