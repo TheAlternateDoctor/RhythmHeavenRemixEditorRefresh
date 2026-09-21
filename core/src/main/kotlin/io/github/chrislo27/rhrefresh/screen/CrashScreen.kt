@@ -22,7 +22,7 @@ import java.io.StringWriter
 class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val lastScreen: Screen?)
     : ToolboksScreen<RHREfreshApplication, CrashScreen>(main), HidesVersionText {
 
-    private data class Splash(val title: String, val subtitle: String, val titleScale: Float = 1f)
+    private data class Splash(val title: String, val subtitle: String, val titleScale: Float = 1f, val alignment: Int = Align.left)
 
     companion object {
         private val splashes: List<Splash> = listOf(
@@ -30,7 +30,7 @@ class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val last
 
                 Splash("Hey baby, how's it going?", "Not very well.", 0.75f),
                 Splash("Yo, it's crash time, huh?", "Maybe so, huh?", 0.8f),
-                Splash("Wot!", "The program fell in a hole.", 1.5f),
+                Splash("Wot!", "The program fell in a hole.", 1.5f, Align.center),
                 Splash("And the correct response is...", "Aww, too bad! The program has crashed.",0.7f),
 
                 Splash("S-crash-o, hey!", "I don't think you wanted the program to break (c'mon, ooh)."),
@@ -46,12 +46,12 @@ class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val last
                 Splash("Martian: \uE06B\uE06B\uE06B\uE06B\uE06B  \uE06B\uE06B", "Translator Tom: RHREfresh has crashed.", 0.75f),
                 Splash("One who relies only on Kotlin will...", "Soon crash RHREfresh on something.", 0.55f),
                 Splash("Oh, Tangotronic...", "PLEASE TAKE ME BACK DARLING I CAN DO BETTER 01110"),
-                Splash("Pwaaaaah!", "I was just holding my breath to get rid of the crash."),
+                Splash("Pwaaaaah!", "I was just holding my breath to get rid of the crash.", 1f, Align.center),
 
-                Splash("Ack! Is this a bug?", "The developer tried very hard."),
+                Splash("Ack! Is this a bug?!", "The developer tried very hard."),
                 Splash("Chu-pa chu-pa BOW!", "You got crashed, huh?",0.95f),
                 Splash("ah taka-OW!", "How could just grabbing sticks possibly improve my remixing abilities?"),
-                Splash("Hmm.. there seemed to be\na problem with RHREfresh.", "Beep!", 0.6f)
+                Splash("Hmm... there seemed to be\na problem with RHREfresh.", "Beep!", 0.7f)
                                                    )
     }
 
@@ -71,9 +71,13 @@ class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val last
 
         stage.elements += label(palette.copy(ftfont = main.defaultFontLargeFTF)).apply {
             this.text = selectedSplash.title
-            this.textAlign = Align.left
+            this.textAlign = selectedSplash.alignment
             this.fontScaleMultiplier = selectedSplash.titleScale
-            this.location.set(screenX = 0.2f, screenWidth = 1f /*0.75f*/, screenY = 0.8f, screenHeight = 0.2f)
+            if(selectedSplash.alignment == Align.center){
+                this.location.set(screenX = 0f, screenWidth = 1f /*0.75f*/, screenY = 0.8f, screenHeight = 0.2f)
+            } else {
+                this.location.set(screenX = 0.2f, screenWidth = 1f /*0.75f*/, screenY = 0.8f, screenHeight = 0.2f)
+            }
         }
         try {
             val icon = Texture("images/icon/crash_icon.png")
