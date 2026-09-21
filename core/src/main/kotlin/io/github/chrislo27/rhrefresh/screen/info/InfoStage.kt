@@ -214,45 +214,12 @@ class InfoStage(parent: UIElement<InfoScreen>?, camera: OrthographicCamera, val 
                 })
             }
 
-            private val textLabel: TextLabel<InfoScreen>
-                get() = labels.first { it is TextLabel } as TextLabel
-            private val imageLabel: ImageLabel<InfoScreen>
-                get() = labels.first { it is ImageLabel } as ImageLabel
-
-            private var lastShift = false
-            private var spinStart: Long = System.currentTimeMillis()
-
             override fun onLeftClick(xPercent: Float, yPercent: Float) {
                 super.onRightClick(xPercent, yPercent)
 
                 main.screen = CreditsScreen(main)
 
                 super.onLeftClick(xPercent, yPercent)
-            }
-
-            override fun render(screen: InfoScreen, batch: SpriteBatch, shapeRenderer: ShapeRenderer) {
-                val shiftDown = (Gdx.input.isShiftDown() && !Gdx.input.isControlDown() && !Gdx.input.isAltDown() && main.screen == infoScreen) || (main.screen is TransitionScreen<*> && lastShift)
-                if (lastShift != shiftDown) {
-                    lastShift = shiftDown
-                    textLabel.textColor = if (shiftDown) {
-                        Colors.get("RAINBOW")
-                    } else {
-                        null
-                    }
-                    if (shiftDown) {
-                        textLabel.isLocalizationKey = true
-                        textLabel.text = "playalong.tempoUp"
-                        spinStart = System.currentTimeMillis()
-                    } else {
-                        textLabel.isLocalizationKey = true
-                        textLabel.text = "screen.info.credits"
-                        imageLabel.rotation = 0f
-                    }
-                }
-                if (shiftDown) {
-                    imageLabel.rotation = MathHelper.getSawtoothWave(System.currentTimeMillis() - spinStart, 1.5f) * -360f
-                }
-                super.render(screen, batch, shapeRenderer)
             }
         }.apply {
             this.location.set(screenX = 1f - (padding + buttonWidth),
