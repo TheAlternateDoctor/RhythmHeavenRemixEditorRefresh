@@ -26,6 +26,7 @@ import io.github.chrislo27.rhrefresh.screen.info.InfoScreen
 import io.github.chrislo27.rhrefresh.sfxdb.GameMetadata
 import io.github.chrislo27.rhrefresh.sfxdb.SFXDatabase
 import io.github.chrislo27.rhrefresh.soundsystem.BeadsSoundSystem
+import io.github.chrislo27.rhrefresh.soundsystem.Ffmpeg
 import io.github.chrislo27.rhrefresh.soundsystem.SoundCache
 import io.github.chrislo27.rhrefresh.soundsystem.SoundStretch
 import io.github.chrislo27.rhrefresh.stage.GenericStage
@@ -185,6 +186,7 @@ class RHREfreshApplication(logger: Logger, logToFile: File?)
         }
         val javaVersion = System.getProperty("java.version").trim()
         Toolboks.LOGGER.info("Running on JRE $javaVersion")
+
         
         instance = this
         
@@ -219,14 +221,26 @@ class RHREfreshApplication(logger: Logger, logToFile: File?)
         
         // Copy over SoundStretch executables
         RHREfresh.SOUNDSTRETCH_FOLDER.mkdirs()
-        val currentOS = SoundStretch.currentOS
-        if (currentOS != SoundStretch.OS.UNSUPPORTED) {
-            Gdx.files.internal("soundstretch/${currentOS.executableName}").copyTo(RHREfresh.SOUNDSTRETCH_FOLDER)
-            RHREfresh.SOUNDSTRETCH_FOLDER.child(currentOS.executableName).file().apply {
+        val currentOSSoundStretch = SoundStretch.currentOS
+        if (currentOSSoundStretch != SoundStretch.OS.UNSUPPORTED) {
+            Gdx.files.internal("soundstretch/${currentOSSoundStretch.executableName}").copyTo(RHREfresh.SOUNDSTRETCH_FOLDER)
+            RHREfresh.SOUNDSTRETCH_FOLDER.child(currentOSSoundStretch.executableName).file().apply {
                 setReadable(true)
                 setExecutable(true)
             }
             Toolboks.LOGGER.info("Copied SoundStretch executables successfully")
+        }
+        // Copy over FFMPEG executables
+
+        RHREfresh.FFMPEG_FOLDER.mkdirs()
+        val currentOSFfmpeg = Ffmpeg.currentOS
+        if (currentOSFfmpeg != Ffmpeg.OS.UNSUPPORTED) {
+            Gdx.files.internal("ffmpeg/${currentOSFfmpeg.executableName}").copyTo(RHREfresh.FFMPEG_FOLDER)
+            RHREfresh.FFMPEG_FOLDER.child(currentOSFfmpeg.executableName).file().apply {
+                setReadable(true)
+                setExecutable(true)
+            }
+            Toolboks.LOGGER.info("Copied FFMPEG executables successfully")
         }
         
         // Generate hue bar

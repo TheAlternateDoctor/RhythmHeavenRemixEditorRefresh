@@ -29,7 +29,7 @@ object DesktopLauncher {
         RHREfresh.launchArguments = args.toList()
         val RHREFRESH_FOLDER:String
         val osName: String = System.getProperty("os.name", "???")?.toLowerCase(Locale.ROOT) ?: "???"
-        println("OS name is \"$osName\"")
+        println("Running on \"$osName\"")
         if(osName.startsWith("linux")){
             RHREFRESH_FOLDER = ".config/RHREfresh"
         } else if(osName.contains("win")){

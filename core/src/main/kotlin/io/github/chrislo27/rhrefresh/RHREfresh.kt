@@ -54,6 +54,7 @@ object RHREfresh {
                 }).apply(FileHandle::mkdirs)
     }
     val SOUNDSTRETCH_FOLDER: FileHandle by lazy { RHREFRESH_FOLDER.child("soundstretch/") }
+    val FFMPEG_FOLDER: FileHandle by lazy { RHREFRESH_FOLDER.child("ffmpeg/") }
 
     val SUPPORTED_DECODING_SOUND_TYPES = listOf("ogg", "mp3", "wav")
     val tmpMusic: FileHandle by lazy {

@@ -10,9 +10,6 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.utils.Align
-import com.tulskiy.musique.audio.Encoder
-import com.tulskiy.musique.audio.formats.flac.FLACEncoder
-import com.tulskiy.musique.audio.formats.ogg.VorbisEncoder
 import de.sciss.jump3r.Main
 import io.github.chrislo27.rhrefresh.PreferenceKeys
 import io.github.chrislo27.rhrefresh.RHREfresh
@@ -26,11 +23,13 @@ import io.github.chrislo27.rhrefresh.screen.ExportRemixScreen.ExportFileType.FLA
 import io.github.chrislo27.rhrefresh.screen.ExportRemixScreen.ExportFileType.MP3
 import io.github.chrislo27.rhrefresh.screen.ExportRemixScreen.ExportFileType.OGG_VORBIS
 import io.github.chrislo27.rhrefresh.screen.ExportRemixScreen.ExportFileType.WAV
+import io.github.chrislo27.rhrefresh.screen.ExportRemixScreen.ExportFileType.AAC
 import io.github.chrislo27.rhrefresh.sfxdb.SFXDatabase
 import io.github.chrislo27.rhrefresh.sfxdb.Series
 import io.github.chrislo27.rhrefresh.sfxdb.datamodel.impl.Cue
 import io.github.chrislo27.rhrefresh.soundsystem.BeadsMusic
 import io.github.chrislo27.rhrefresh.soundsystem.BeadsSoundSystem
+import io.github.chrislo27.rhrefresh.soundsystem.Ffmpeg
 import io.github.chrislo27.rhrefresh.stage.GenericStage
 import io.github.chrislo27.rhrefresh.track.PlayState
 import io.github.chrislo27.rhrefresh.track.Remix
@@ -50,7 +49,11 @@ import net.beadsproject.beads.ugens.Clock
 import net.beadsproject.beads.ugens.DelayTrigger
 import net.beadsproject.beads.ugens.RangeLimiter
 import net.beadsproject.beads.ugens.RecordToFile
-import org.xiph.libvorbis.vorbis_comment
+import ws.schild.jave.progress.EncoderProgressListener
+import ws.schild.jave.encode.AudioAttributes
+import ws.schild.jave.encode.EncodingAttributes
+import ws.schild.jave.info.MultimediaInfo
+import ws.schild.jave.process.ProcessLocator
 import java.awt.Desktop
 import java.io.File
 import java.util.*
@@ -92,7 +95,7 @@ class ExportRemixScreen(main: RHREfreshApplication)
     private val selectionStage: SelectionStage
     
     private enum class ExportFileType(val extension: String) {
-        WAV("wav"), MP3("mp3"), OGG_VORBIS("ogg"), FLAC("flac");
+        WAV("wav"), MP3("mp3"), OGG_VORBIS("ogg"), FLAC("flac"), AAC("aac");
         
         companion object {
             val VALUES: List<ExportFileType> by lazy { values().toList() }
@@ -286,6 +289,7 @@ class ExportRemixScreen(main: RHREfreshApplication)
             MP3 -> 2
             OGG_VORBIS -> 2
             FLAC -> 2
+            AAC -> 2
         }
         
         fun updateProgress(localization: String, localPercent: Int, stage: Int) {
@@ -348,50 +352,35 @@ class ExportRemixScreen(main: RHREfreshApplication)
                         }
                         main.run(args)
                     }
-                    OGG_VORBIS, FLAC -> {
-                        val pair: Pair<Encoder, String> = when (fileType) {
-                            OGG_VORBIS -> VorbisEncoder() to "oggvorbis"
-                            FLAC -> FLACEncoder() to "flac"
+                    OGG_VORBIS, FLAC, AAC -> {
+                        val codec = when (fileType) {
+                            OGG_VORBIS -> "libvorbis"
+                            FLAC -> "flac"
+                            AAC -> "adts"
                             else -> error("Unsupported encoder for file type $fileType")
                         }
-                        val encoder: Encoder = pair.first
-                        val audioFormat = AudioFormat(context.sampleRate, 16, 2, true, false)
-                        if (encoder is VorbisEncoder) {
-                            if (!encoder.open(file, audioFormat, VorbisEncoder.DEFAULT_BITRATE, vorbis_comment().apply {
-                                        if (exportOptions.madeWithComment) {
-                                            vorbis_comment_add_tag("Comments", commentTag)
-                                        }
-                                    }))
-                                error("Failed to open $fileType encoder")
-                        } else {
-                            if (!encoder.open(file, audioFormat))
-                                error("Failed to open $fileType encoder")
-                        }
-                        
-                        val buffer: ByteArray = ByteArray(8192)
-                        val stream = recorderFile.inputStream()
-                        val fileSize = recorderFile.length()
-                        var bytesRead = 0L
-                        stream.skip(44L)
-                        var bytes = stream.read(buffer)
-                        
-                        fun updateLabel() {
-                            updateProgress(pair.second, (bytesRead.toDouble() / fileSize * 100).roundToInt(), 2)
-                        }
-                        
-                        while (bytes >= 4) {
-                            bytesRead += bytes
-                            encoder.encode(buffer, bytes)
-                            bytes = stream.read(buffer)
-                            
-                            updateLabel()
-                        }
-                        
-                        bytesRead = fileSize
-                        updateLabel()
-                        
-                        stream.close()
-                        encoder.close()
+                        val audio = AudioAttributes();
+                        audio.setCodec(codec)
+                        audio.setSamplingRate(context.sampleRate.toInt())
+                        audio.setChannels(2)
+
+                        val attrs = EncodingAttributes()
+                        attrs.setOutputFormat(fileType.extension)
+                        attrs.setAudioAttributes(audio)
+
+
+                        val encoder = Ffmpeg.makeEncoder()
+                        val multimediaFile = Ffmpeg.createMultimediaObject(recorderFile)
+                        multimediaFile.info.metadata = mapOf("Comments" to commentTag)
+                        encoder.encode(multimediaFile, file, attrs, object: EncoderProgressListener {
+                            override fun sourceInfo(info: MultimediaInfo?) {
+                            }
+                            override fun progress(permil: Int){
+                                updateProgress(codec, permil / 10, 2)
+                            }
+                            override fun message(message: String?) {
+                            }
+                        })
                     }
                 }
                 
@@ -441,7 +430,7 @@ class ExportRemixScreen(main: RHREfreshApplication)
             if (remix.music != null) {
                 val music = BeadsMusic((remix.music!!.music as BeadsMusic).audio)
                 music.stop()
-                
+
                 val musicStartMs = (remix.musicStartSec * 1000) - startMs
                 
                 context.out.addDependent(DelayTrigger(context, musicStartMs, addBead {
@@ -552,7 +541,7 @@ class ExportRemixScreen(main: RHREfreshApplication)
                 Gdx.app.postRunnable {
                     mainLabel.text = ""
                 }
-                val filter = TinyFDWrapper.FileExtFilter(Localization["screen.export.fileFilter", "MP3, OGG, FLAC, WAV"], "*.mp3", "*.ogg", "*.flac", "*.wav")
+                val filter = TinyFDWrapper.FileExtFilter(Localization["screen.export.fileFilter", "MP3, OGG, FLAC, WAV, AAC"], "*.mp3", "*.ogg", "*.flac", "*.wav", "*.aac")
                 TinyFDWrapper.saveFile(Localization["screen.export.fileChooserTitle"], attemptRememberDirectory(main, PreferenceKeys.FILE_CHOOSER_EXPORT) ?: getDefaultDirectory(), filter) { file ->
                     isChooserOpen = false
                     Gdx.app.postRunnable {

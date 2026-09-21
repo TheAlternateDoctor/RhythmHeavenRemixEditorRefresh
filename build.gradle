@@ -67,7 +67,6 @@ project(":desktop") {
         implementation "org.eclipse.jgit:org.eclipse.jgit:5.8.1.202007141445-r"
         implementation "org.slf4j:slf4j-nop:1.7.25"
         implementation "de.sciss:jump3r:1.0.5"
-        implementation "com.github.chrislo27:musique-barebones:3807b60"
         // implementation "club.minnced:java-discord-rpc:2.0.2"
         implementation "net.lingala.zip4j:zip4j:2.6.2"
         implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
@@ -80,6 +79,8 @@ project(":desktop") {
         implementation "org.lwjgl:lwjgl-tinyfd:$lwjglVersion:natives-linux"
         implementation "org.lwjgl:lwjgl-tinyfd:$lwjglVersion:natives-linux-arm32"
         implementation "org.lwjgl:lwjgl-tinyfd:$lwjglVersion:natives-linux-arm64"
+
+        implementation "ws.schild:jave-core:4.2.0"
 
         implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
 
@@ -116,6 +117,8 @@ project(":core") {
         implementation "net.lingala.zip4j:zip4j:2.6.2"
         implementation "org.lwjgl:lwjgl-glfw:$lwjglVersion"
         implementation "org.lwjgl:lwjgl-tinyfd:$lwjglVersion"
+
+        implementation "ws.schild:jave-core:4.2.0"
         
         implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
 
