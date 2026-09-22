@@ -106,6 +106,7 @@ object GitHelper {
                     .setRemote("origin")
                     .setURI(RHREfresh.DATABASE_URL)
                     .setDirectory(file)
+                    .setDepth(1)
                     .call()
         }
     }
