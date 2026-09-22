@@ -238,7 +238,7 @@ class ProgramSettingsStage(parent: UIElement<InfoScreen>?, camera: OrthographicC
             }
 
             this.tooltipTextIsLocalizationKey = true
-            this.tooltipText = if (SoundStretch.isSupported) "screen.info.disableTimeStretching.tooltip" else "screen.info.disableTimeStretching.notSupported.tooltip"
+            this.tooltipText = if (Ffmpeg.isSupported) "screen.info.disableTimeStretching.tooltip" else "screen.info.disableTimeStretching.notSupported.tooltip"
 
             this.checkedStateChanged = {
                 if (!main.settings.disableTimeStretching && it) {
@@ -253,7 +253,7 @@ class ProgramSettingsStage(parent: UIElement<InfoScreen>?, camera: OrthographicC
                               screenY = padding * 7 + buttonHeight * 6,
                               screenWidth = buttonWidth,
                               screenHeight = buttonHeight)
-            this.enabled = SoundStretch.isSupported
+            this.enabled = Ffmpeg.isSupported
         }
         // Exploding entities
         settings.elements += TrueCheckbox(palette, settings, settings).apply {

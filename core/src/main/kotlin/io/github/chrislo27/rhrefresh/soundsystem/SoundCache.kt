@@ -42,7 +42,7 @@ object SoundCache {
                 val tmpFile: File = File.createTempFile("rhre-lampshade-derivative-gen-", ".wav").apply {
                     deleteOnExit()
                 }
-                SoundStretch.processStreams(RHREfresh.SOUNDSTRETCH_FOLDER.file(), originalWav, tmpFile,
+                Ffmpeg.processStreams(originalWav, tmpFile,
                                             derivative.tempoPercent, derivative.pitchSemitones, derivative.ratePercent, false)
                 val moddedAudio: BeadsAudio = BeadsSoundSystem.newAudio(FileHandle(tmpFile))
                 tmpFile.delete()

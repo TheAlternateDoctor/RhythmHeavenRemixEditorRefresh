@@ -53,12 +53,10 @@ import ws.schild.jave.progress.EncoderProgressListener
 import ws.schild.jave.encode.AudioAttributes
 import ws.schild.jave.encode.EncodingAttributes
 import ws.schild.jave.info.MultimediaInfo
-import ws.schild.jave.process.ProcessLocator
 import java.awt.Desktop
 import java.io.File
 import java.util.*
 import javax.sound.sampled.AudioFileFormat
-import javax.sound.sampled.AudioFormat
 import kotlin.math.*
 
 
@@ -369,7 +367,7 @@ class ExportRemixScreen(main: RHREfreshApplication)
                         attrs.setAudioAttributes(audio)
 
 
-                        val encoder = Ffmpeg.makeEncoder()
+                        val encoder = Ffmpeg.createEncoder()
                         val multimediaFile = Ffmpeg.createMultimediaObject(recorderFile)
                         multimediaFile.info.metadata = mapOf("Comments" to commentTag)
                         encoder.encode(multimediaFile, file, attrs, object: EncoderProgressListener {
