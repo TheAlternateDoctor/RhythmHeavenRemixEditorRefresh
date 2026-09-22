@@ -245,6 +245,9 @@ class GitUpdateScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfreshAppl
             return false
         }
 
+        override fun showDuration(enabled: Boolean) {
+        }
+
     }
 
     private fun toNextScreen() {

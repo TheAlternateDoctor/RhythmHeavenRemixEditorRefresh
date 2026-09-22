@@ -339,7 +339,7 @@ class RHREfreshApplication(logger: Logger, logToFile: File?)
                 ScreenRegistry += "editorVersion" to EditorVersionScreen(this)
                 ScreenRegistry += "news" to NewsScreen(this)
                 ScreenRegistry += "advancedOptions" to AdvancedOptionsScreen(this)
-                ScreenRegistry += "folderChangeWarning" to FolderChangeWarningScreen(this)
+                ScreenRegistry += "importOlderRhre" to ImportOlderRHREScreen(this)
             }
             
             val nextScreenLambda: (() -> ToolboksScreen<*, *>?) = nextScreenLambda@{
@@ -358,8 +358,8 @@ class RHREfreshApplication(logger: Logger, logToFile: File?)
                 loadWindowSettings()
                 dontShowResizeInfo = false
                 val nextScreen = ScreenRegistry[
-                    if(RHREfresh.triggerFolderChangeScreen || !preferences.getBoolean(PreferenceKeys.PASSED_FOLDER_CHANGE_WARNING)){
-                        "folderChangeWarning"
+                    if(RHREfresh.triggerFolderChangeScreen || (!preferences.getBoolean(PreferenceKeys.PASSED_FOLDER_CHANGE_WARNING) && File(System.getProperty("user.home") + "/.rhre3").exists() && !RHREfresh.portableMode)){
+                        "importOlderRhre"
                     } else if (RHREfresh.skipGitScreen){
                         "sfxdbLoad"
                     }
