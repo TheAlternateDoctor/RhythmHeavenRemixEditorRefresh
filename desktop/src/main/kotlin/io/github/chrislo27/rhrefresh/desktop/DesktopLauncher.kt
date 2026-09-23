@@ -62,37 +62,6 @@ object DesktopLauncher {
         val logger = Logger()
         val portable = arguments.portableMode
 
-        // Copy the legacy folder over, so that the two can coexist
-        // Also copies the key to the new names
-//        if(!portable && !File(RHREFRESH_EXTERNAL_FOLDER).exists() && File(System.getProperty("user.home") + "/.rhre3").exists()){
-//            val legacyFolder = File(System.getProperty("user.home") + "/.rhre3")
-//            val legacyAdvFolder = File(System.getProperty("user.home") + "/.rhre3adv")
-//            val legacyRefreshFolder = File(System.getProperty("user.home") + "/.rhrefresh")
-//            val newFolder = File(RHREFRESH_EXTERNAL_FOLDER)
-//            newFolder.mkdir()
-//            if(legacyRefreshFolder.exists()){
-//                legacyRefreshFolder.copyRecursively(newFolder)
-//            }else if(legacyAdvFolder.exists()){
-//                legacyAdvFolder.copyRecursively(newFolder)
-//            } else if(legacyFolder.exists()){
-//                legacyFolder.copyRecursively(newFolder)
-//                File("${RHREFRESH_EXTERNAL_FOLDER}/customSounds").deleteRecursively()
-//            }
-//            if(!File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH").exists() && File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3").exists()){
-//                val prefFile = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3")
-//                val prefFileRecovery = File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHRE3-recovery")
-//                prefFile.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH"))
-//                prefFileRecovery.copyTo(File("${RHREFRESH_EXTERNAL_FOLDER}/prefs/RHREFRESH-recovery"))
-//                prefFile.delete()
-//                prefFileRecovery.delete()
-//            }
-//        }
-//        //Moves the SFXDB to its rightful place
-//        if(!portable && File("${RHREFRESH_EXTERNAL_FOLDER}/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
-//            val target = File("${RHREFRESH_EXTERNAL_FOLDER}/sfx/")
-//            val source = File("${RHREFRESH_EXTERNAL_FOLDER}/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}")
-//            source.copyRecursively(target)
-//            source.deleteRecursively()
         if(portable && File("/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}/.git").exists()){
             val target = File("/$RHREFRESH_FOLDER/sfx/")
             val source = File("/$RHREFRESH_FOLDER/sfx/${RHREfresh.MASTER_DATABASE_BRANCH}")

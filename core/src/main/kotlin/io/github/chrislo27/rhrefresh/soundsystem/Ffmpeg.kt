@@ -98,8 +98,13 @@ object Ffmpeg{
             if(!filterChain.endsWith(",")) filterChain+=","
             filterChain += "rubberband=pitch="+(2.0.pow(pitchSemitones.div(12).toDouble()))
         }
-        Encoder.setOptionAtIndex(ValueArgument(ArgType.OUTFILE, "-af") { Optional.of(filterChain) }, 33)
+        if(filterChain.isNotEmpty()){
+            Encoder.setOptionAtIndex(ValueArgument(ArgType.OUTFILE, "-af") { Optional.of(filterChain) }, 33)
+        } else{
+            Encoder.removeOptionAtIndex(33)
+        }
         val multimediaFile = createMultimediaObject(input)
+        Toolboks.LOGGER.info("FFMPEG ran for file ${input.path} with arguments `$filterChain`")
         encoder.encode(multimediaFile, output, attrs)
     }
 }

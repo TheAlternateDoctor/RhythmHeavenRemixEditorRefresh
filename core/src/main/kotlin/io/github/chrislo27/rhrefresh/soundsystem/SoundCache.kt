@@ -101,12 +101,12 @@ object SoundCache {
 data class Derivative(val tempoPercent: Float, val pitchSemitones: Float, val ratePercent: Float = 0f) {
 
     companion object {
-        val NO_CHANGES: Derivative = Derivative(0f, 0f, 0f).apply {
+        val NO_CHANGES: Derivative = Derivative(1f, 0f, 0f).apply {
             require(this.isUnmodified())
         }
     }
 
-    fun isUnmodified(): Boolean = tempoPercent == 0f && pitchSemitones == 0f && ratePercent == 0f
+    fun isUnmodified(): Boolean = tempoPercent == 1f && pitchSemitones == 0f && ratePercent == 0f
 }
 
 
