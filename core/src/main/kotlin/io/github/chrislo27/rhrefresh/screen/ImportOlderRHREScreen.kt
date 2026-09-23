@@ -76,6 +76,7 @@ class ImportOlderRHREScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfre
             })
             this.leftClickAction = { _, _ ->
                 main.preferences.putBoolean(PreferenceKeys.PASSED_FOLDER_CHANGE_WARNING, true)
+                main.preferences.flush()
                 val screen = ScreenRegistry[if (RHREfresh.skipGitScreen) "sfxdbLoad" else "databaseUpdate"]
                 main.screen = screen
             }
