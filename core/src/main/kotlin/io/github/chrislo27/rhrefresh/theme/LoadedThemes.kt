@@ -75,7 +75,7 @@ object LoadedThemes {
             it.name = name
         }
         
-        index = if (!fromPrefs) 0 else preferences.getInteger(PreferenceKeys.THEME_INDEX, 0)
+        index = if (!fromPrefs) 0 else preferences.getInteger(PreferenceKeys.THEME_INDEX, 1)
         
         if (index !in 0 until themes.size) {
             index = 0
