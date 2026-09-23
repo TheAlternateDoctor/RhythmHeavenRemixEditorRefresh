@@ -10,6 +10,7 @@ import io.github.chrislo27.toolboks.ui.ImageLabel
 import io.github.chrislo27.toolboks.ui.Stage
 import io.github.chrislo27.toolboks.ui.UIPalette
 import io.github.chrislo27.toolboks.util.MathHelper
+import kotlin.random.Random
 
 
 open class LoadingIcon<S : ToolboksScreen<*, *>>(private val palette: UIPalette, stage: Stage<S>)
@@ -22,18 +23,42 @@ open class LoadingIcon<S : ToolboksScreen<*, *>>(private val palette: UIPalette,
         private const val REGION_SIZE = 32
 
         private const val PADDLER_COLUMNS = 10
-        private const val PADDLER_ROWS = 17
+        private const val PADDLER_ROWS = 16
         private const val PADDLER_FRAMERATE = 25.0f
         private const val PADDLER_REGION_SIZE = 64
 
         @Volatile var usePaddlerAnimation: Boolean = true
     }
 
+    private data class Variation(val index: Int, val weight: Int = 100)
+    private val variations: List<Variation> = listOf(
+        Variation(1), // Karate Joe
+        Variation(2), // Hairy Onion
+        Variation(3), // Electric Fish
+        Variation(4), // Fillbot
+        Variation(5), // Shoot em Up alien
+        Variation(6), // Stepswitcher
+        Variation(7), // Marshall!
+        Variation(8), // Screwbot
+        Variation(9), // Seal
+        Variation(10), // Goat
+        Variation(11), // Courtney
+        Variation(12), // Lumbearjack cat
+        Variation(13), // Hoop Trundler
+        Variation(14), // Warping Alien
+        Variation(15), // Thunder cloud
+    )
+    private var totalVariationWeight = 0
+
     var speed = 1f
     private var inited = false
     private val mainImage: ImageLabel<S> = ImageLabel(palette, this, this)
     private val penImage: ImageLabel<S> = ImageLabel(palette, this, this)
     private val paddlerImage: ImageLabel<S> = ImageLabel(palette, this, this)
+
+    private var oldFrame = 0
+    private var currentVariation = 1
+    private var oldVariation = 0
 
     var renderType: ImageLabel.ImageRendering
         get() = mainImage.renderType
@@ -73,9 +98,14 @@ open class LoadingIcon<S : ToolboksScreen<*, *>>(private val palette: UIPalette,
             mainImage.visible = false
             penImage.visible = false
         } else {
-            val currentVariation: Int = ((MathHelper.getSawtoothWave(
-                    SECONDS_PER_VARIATION * VARIATIONS) * VARIATIONS / speed).toInt() + 1).coerceIn(1, VARIATIONS)
             val currentFrame: Int = (MathHelper.getSawtoothWave(SECONDS_PER_VARIATION / speed) * FRAMES).toInt().coerceIn(0, FRAMES - 1)
+            if(currentFrame<oldFrame){
+                do {
+                    currentVariation = randomVariation()
+                } while(currentVariation == oldVariation)
+                oldVariation = currentVariation
+            }
+            oldFrame = currentFrame
             mainImage.image?.also { img ->
                 img.setRegion(REGION_SIZE * (currentFrame + 1), REGION_SIZE * (currentVariation), REGION_SIZE, REGION_SIZE)
             }
@@ -88,6 +118,23 @@ open class LoadingIcon<S : ToolboksScreen<*, *>>(private val palette: UIPalette,
         }
 
         super.render(screen, batch, shapeRenderer)
+    }
+
+    fun randomVariation(): Int{
+        if(totalVariationWeight == 0){
+            for((_, weight) in variations){
+                totalVariationWeight += weight
+            }
+        }
+        val random = Random.nextInt(totalVariationWeight)
+        var variationWeight = 0
+        for((index, weight) in variations){
+            variationWeight += weight
+            if(variationWeight>random){
+                return index
+            }
+        }
+        return variations.first().index
     }
 
 }

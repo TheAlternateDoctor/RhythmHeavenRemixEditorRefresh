@@ -123,7 +123,7 @@ class DefaultAssetLoader : AssetRegistry.IAssetLoader {
         AssetRegistry.loadAsset<Texture>("ui_search_filter_useInRemix", "images/ui/searchbar/use_in_remix.png", linearTexture())
         
         AssetRegistry.loadAsset<Texture>("ui_songtitle", "images/ui/song_title.png", linearTexture())
-        AssetRegistry.loadAsset<Texture>("ui_loading_icon", "images/loading/rhre3_animation.png")
+        AssetRegistry.loadAsset<Texture>("ui_loading_icon", "images/loading/rhrefresh_animation.png")
         AssetRegistry.loadAsset<Texture>("ui_loading_paddler", "images/loading/loading_paddler.png")
         
         AssetRegistry.loadAsset<Texture>("menu_bg_square", "images/menu/bg_square.png")
