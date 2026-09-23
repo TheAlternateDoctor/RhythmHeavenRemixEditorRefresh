@@ -19,7 +19,7 @@ class MetronomeButton(val editor: Editor, palette: UIPalette, parent: UIElement<
 
     private val metronomeFrames: List<TextureRegion> by lazy {
         val tex = AssetRegistry.get<Texture>("ui_icon_metronome")
-        val size = 64
+        val size = 256
         // center, right, rightest, right, center, left, leftest, left
         listOf(
                 TextureRegion(tex, size * 2, 0, size, size),

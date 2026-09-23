@@ -120,7 +120,7 @@ class NewsScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfreshApplicati
             this.location.set(screenX = 1f - (this.location.screenX + this.location.screenWidth))
 
             addLabel(ImageLabel(palette, this, this.stage).apply {
-                this.image = TextureRegion(AssetRegistry.get<Texture>("ui_icon_updatesfx"))
+                this.image = TextureRegion(AssetRegistry.get<Texture>("ui_icon_refresh"))
             })
         }
         stage.bottomStage.elements += refreshButton
