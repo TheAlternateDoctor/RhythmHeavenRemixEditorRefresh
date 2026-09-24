@@ -16,10 +16,32 @@ object Credits {
                 "title" crediting RHREfresh.GITHUB,
                 "fresh" crediting "",
                 "programming" crediting "TheAlternateDoctor",
-            "sfx" crediting (SFXDatabase.let { if (!it.isDataLoading()) it.data.sfxCredits.sortedBy { it.toLowerCase(Locale.ROOT) }.joinToString(separator = ", ") else null } ?: sfxCreditsLegacyFallback),
-                "gfx" crediting "dexiedoo_octo, Katie1118, Zeo",
+                "sfx" crediting (SFXDatabase.let { if (!it.isDataLoading()) it.data.sfxCredits.sortedBy { it.toLowerCase(Locale.ROOT) }.joinToString(separator = ", ") else null } ?: sfxCreditsLegacyFallback),
+                "gfx" crediting "dexiedoo_octo, Katie1118, viviancherry",
                 "consulting" crediting "chrislo27, Kievit",
+                "logo" crediting "dexiedoo_octo, Katie1118, Kievit, viviancherry",
+                "updateutil" crediting "Zeo",
                 "playtest" crediting "patataofcourse, Haikaede, Mizu Bunny, Maddy, viviancherry, Chloe, conhlee, dexiedoo_octo, Dracobot, elp, Gosh, Killble, OpaliteDelight, Seanski2, Yumiko!, Zeo",
+                "resources" crediting
+                        """Rhythm Heaven assets by Nintendo
+[#FF8900]Kotlin[]
+[DARK_GRAY]lib[][#E10000]GDX[]
+LWJGL
+Toolboks
+Beads
+FFMPEG
+Async HTTP Client
+Jackson
+JGit
+Apache Commons IO
+SLF4J
+OSHI
+jump3r
+rhmodding/bread
+JCommander
+zip4j
+Jam3/glsl-fast-gaussian-blur""",
+
                 "rhre3" crediting "",
                 "programming" crediting "chrislo27\n${Localization["credits.title.programming.contributions", "Kamayana"]}",
                 "localization" crediting
@@ -35,27 +57,6 @@ object Credits {
                 "gfx" crediting "GlitchyPSIX, lilbitdun, Steppy, Tickflow",
                 "extras" crediting "GenericArrangements, Malalaika, The Drummer",
                 "specialThanks" crediting """Alchemyking, AngryTapper, ArsenArsen, baguette, bin5s5, Chillius, ChorusSquid, Clone5184, danthonywalker, Dracobot, Draster, Dream Top, Dylstructor, EBPB2K, Fco, flyance, Fringession, garbo, GenericArrangements, (◉.◉)☂, GinoTitan, GlitchyPSIX, GrueKun, inkedsplat, iRonnoc5, jos, Lvl100Feraligatr, Malalaika, Maziodyne, Mezian, minenice55, Miracle22, Mixelz, nave, nerd, oofie, Pengu123, PikaMasterJesi, Rabbidking, RobSetback, SJGarnet, sp00pster, Ssure2, SuicuneWiFi, susmobile, TheRhythmKid, Turtike, Zenon, RHModding and Custom Remix Tourney Discord servers""",
-                "resources" crediting
-                        """Rhythm Heaven assets by Nintendo
-[#FF8900]Kotlin[]
-[DARK_GRAY]lib[][#E10000]GDX[]
-LWJGL
-Toolboks
-Beads
-Async HTTP Client
-Jackson
-JGit
-Apache Commons IO
-SLF4J
-OSHI
-jump3r
-musique
-java-discord-rpc
-rhmodding/bread
-JCommander
-SoundStretch and SoundTouch
-zip4j
-Jam3/glsl-fast-gaussian-blur""",
                 "donators" crediting "",
                 "you" crediting ""
                      )
