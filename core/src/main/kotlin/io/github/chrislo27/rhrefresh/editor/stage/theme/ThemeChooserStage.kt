@@ -134,7 +134,7 @@ class ThemeChooserStage(val editor: Editor, val palette: UIPalette, parent: Edit
                 this.tooltipTextIsLocalizationKey = true
                 this.tooltipText = "editor.themeChooser.reset"
                 this.addLabel(ImageLabel(palette, this, this.stage).apply {
-                    this.image = TextureRegion(AssetRegistry.get<Texture>("ui_icon_updatesfx"))
+                    this.image = TextureRegion(AssetRegistry.get<Texture>("ui_icon_refresh"))
                 })
             }
 
