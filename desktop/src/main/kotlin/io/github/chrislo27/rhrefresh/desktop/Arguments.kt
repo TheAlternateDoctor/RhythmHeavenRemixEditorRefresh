@@ -33,8 +33,8 @@ class Arguments {
     @Parameter(names = ["--verify-sfxdb"], description = "Verifies and reports warnings/errors for the entire SFX Database after loading.")
     var verifySfxdb: Boolean = false
     
-    @Parameter(names = ["--no-analytics"], description = "Disables sending of analytics and crash reports.")
-    var noAnalytics: Boolean = false
+    // @Parameter(names = ["--no-analytics"], description = "Disables sending of analytics and crash reports.")
+    // var noAnalytics: Boolean = false
     
     @Parameter(names = ["--no-online-counter"], description = "Disables the online user count feature.")
     var noOnlineCounter: Boolean = false
