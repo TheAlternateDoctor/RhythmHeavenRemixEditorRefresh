@@ -107,7 +107,7 @@ class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val last
             this.fontScaleMultiplier = 0.85f
             this.textAlign = Align.topLeft
             this.textWrapping = true
-            this.text = "Last screen: ${lastScreen?.javaClass?.canonicalName}\nLog file: ${if (RHREfresh.portableMode) "./.rhre3/logs/" else "~/.rhre3/logs"}/${SysOutPiper.logFile.name}\nException: [#FF6B68]${StringWriter().apply {
+            this.text = "Last screen: ${lastScreen?.javaClass?.canonicalName}\nLog file: ${if (RHREfresh.portableMode) "./.rhre3/logs/" else "${RHREfresh.RHREFRESH_FOLDER}/logs"}/${SysOutPiper.logFile.name}\nException: [#FF6B68]${StringWriter().apply {
                 val pw = PrintWriter(this)
                 throwable.printStackTrace(pw)
                 pw.flush()
