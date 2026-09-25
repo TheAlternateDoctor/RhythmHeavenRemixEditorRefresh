@@ -386,7 +386,7 @@ class PlayalongSettingsScreen(main: RHREfreshApplication, val lastScreen: Screen
         val squareHeight = 0.1f
         stage.centreStage.elements += Button(palette, stage.centreStage, stage.centreStage).apply {
             addLabel(ImageLabel(palette, this, this.stage).apply {
-                this.image = TextureRegion(AssetRegistry.get<Texture>("ui_icon_updatesfx"))
+                this.image = TextureRegion(AssetRegistry.get<Texture>("ui_icon_refresh"))
                 this.renderType = ImageLabel.ImageRendering.ASPECT_RATIO
             })
             this.leftClickAction = { _, _ ->

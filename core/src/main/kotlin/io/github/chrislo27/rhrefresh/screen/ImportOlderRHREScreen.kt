@@ -111,7 +111,6 @@ class ImportOlderRHREScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfre
         val thread = Thread {
 
                 // Copy the legacy folder over, so that the two can coexist
-                // Also copies the key to the new names
                 val legacyFolder = File(System.getProperty("user.home") + "/.rhre3")
                 val legacyAdvFolder = File(System.getProperty("user.home") + "/.rhre3adv")
                 val legacyRefreshFolder = File(System.getProperty("user.home") + "/.rhrefresh")
@@ -145,6 +144,7 @@ class ImportOlderRHREScreen(main: RHREfreshApplication) : ToolboksScreen<RHREfre
                     })
                     File(newFolder,"customSounds").deleteRecursively()
                 }
+                // Transfer the preferences
                 if(!File(newFolder,"prefs/RHREFRESH").exists() && File(newFolder,"prefs/RHRE3").exists()){
                     updateState(2)
                     val prefFile = File(newFolder,"prefs/RHRE3")
