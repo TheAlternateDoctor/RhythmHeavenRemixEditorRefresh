@@ -15,7 +15,7 @@ class TempoChange(container: TempoChanges, beat: Float, val bpm: Float, val swin
     : Tracker<TempoChange>(container, beat, width) {
 
     companion object {
-        val MIN_TEMPO: Float = 1.0f
+        val MIN_TEMPO: Float = 5.0f
         val MAX_TEMPO: Float = 600f
 
         fun getSecondsDuration(beatWidth: Float, startBpm: Float, endBpm: Float): Float {
