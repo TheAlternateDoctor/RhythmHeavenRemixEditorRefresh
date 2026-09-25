@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.Disposable
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.databind.node.ArrayNode
 import com.fasterxml.jackson.databind.node.ObjectNode
+import io.github.chrislo27.rhrefresh.PreferenceKeys
 import io.github.chrislo27.rhrefresh.RHREfresh
 import io.github.chrislo27.rhrefresh.RHREfreshApplication
 import io.github.chrislo27.rhrefresh.util.JsonHandler
@@ -66,7 +67,7 @@ object AnalyticsHandler : Disposable {
 
         flushScheduler.scheduleAtFixedRate({ flush() }, 5000L, 5000L, TimeUnit.MILLISECONDS)
 
-        if (RHREfresh.noAnalytics) {
+        if (!prefs.getBoolean(PreferenceKeys.SETTINGS_ENABLE_ANALYTICS)) {
             GlobalScope.launch {
                 delay(2000L)
                 dispose()
@@ -115,7 +116,7 @@ object AnalyticsHandler : Disposable {
             set<ObjectNode>("user_properties", objectNode().apply {
                 set<ObjectNode>("\$set", objectMapper.valueToTree<ObjectNode>(mapOf(
                         "createdAt" to prefs.getString(PREFS_USER_CREATED, (System.currentTimeMillis() / 1000L).toString()),
-                        "analyticsDisabled" to RHREfresh.noAnalytics,
+                        "analyticsDisabled" to !prefs.getBoolean(PreferenceKeys.SETTINGS_ENABLE_ANALYTICS),
                         "onlineCounterDisabled" to RHREfresh.noOnlineCounter,
                         "language" to Localization.currentBundle.locale.toString()
                                                                                    )))

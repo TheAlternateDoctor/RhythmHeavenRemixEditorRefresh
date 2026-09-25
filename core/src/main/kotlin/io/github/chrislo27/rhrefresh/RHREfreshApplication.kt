@@ -270,7 +270,7 @@ class RHREfreshApplication(logger: Logger, logToFile: File?)
         GlobalScope.launch {
             Toolboks.LOGGER.info("Starting analytics")
             val nano = measureNanoTime {
-                AnalyticsHandler.initAndIdentify(Gdx.app.getPreferences("RHRE3-analytics"))
+                AnalyticsHandler.initAndIdentify(preferences)
             }
             Toolboks.LOGGER.info("Analytics started successfully in ${nano / 1000000.0} ms")
         }

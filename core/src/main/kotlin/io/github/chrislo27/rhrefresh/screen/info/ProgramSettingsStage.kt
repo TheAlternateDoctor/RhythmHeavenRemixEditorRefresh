@@ -350,12 +350,38 @@ class ProgramSettingsStage(parent: UIElement<InfoScreen>?, camera: OrthographicC
             }
 
             this.checkedStateChanged = {
-                preferences.putBoolean(PreferenceKeys.SETTINGS_CLOSE_WARNING, it)
+                preferences.putBoolean(PreferenceKeys.SETTINGS_CLOSE_WARNING, it).flush()
                 didChangeSettings = true
             }
 
             this.location.set(screenX = 1f - (padding + buttonWidth),
                 screenY = padding * 4 + buttonHeight * 3,
+                screenWidth = buttonWidth,
+                screenHeight = buttonHeight)
+        }
+
+        // Enable analytics
+        settings.elements += TrueCheckbox(palette, settings, settings).apply {
+            this.checked = preferences.getBoolean(PreferenceKeys.SETTINGS_ENABLE_ANALYTICS, false)
+
+            this.textLabel.apply {
+                this.fontScaleMultiplier = fontScale * 0.9f
+                this.isLocalizationKey = true
+                this.textWrapping = false
+                this.textAlign = Align.left
+                this.text = "screen.info.enableAnalytics"
+            }
+
+            this.checkedStateChanged = {
+                preferences.putBoolean(PreferenceKeys.SETTINGS_ENABLE_ANALYTICS, it).flush()
+                didChangeSettings = true
+            }
+
+            this.tooltipText = "screen.info.enableAnalytics.tooltip"
+            this.tooltipTextIsLocalizationKey = true
+
+            this.location.set(screenX = 1f - (padding + buttonWidth),
+                screenY = padding * 3 + buttonHeight * 2,
                 screenWidth = buttonWidth,
                 screenHeight = buttonHeight)
         }
@@ -373,7 +399,7 @@ class ProgramSettingsStage(parent: UIElement<InfoScreen>?, camera: OrthographicC
             }
 
             this.checkedStateChanged = {
-                preferences.putBoolean(PreferenceKeys.SETTINGS_NEW_TRACKS_ON_TOP, it)
+                preferences.putBoolean(PreferenceKeys.SETTINGS_NEW_TRACKS_ON_TOP, it).flush()
                 didChangeSettings = true
             }
 

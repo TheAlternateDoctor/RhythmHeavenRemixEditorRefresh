@@ -91,7 +91,6 @@ object RHREfresh {
     var forceGitCheck: Boolean = false
     var verifySfxDb: Boolean = false
     var immediateEvent: Int = 0
-    var noAnalytics: Boolean = true
     var noOnlineCounter: Boolean = false
     var outputGeneratedDatamodels: Boolean = false
     var outputCustomSfx: Boolean = false

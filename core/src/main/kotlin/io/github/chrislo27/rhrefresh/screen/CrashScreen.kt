@@ -6,6 +6,7 @@ import com.badlogic.gdx.Screen
 import com.badlogic.gdx.graphics.Texture
 import com.badlogic.gdx.graphics.g2d.TextureRegion
 import com.badlogic.gdx.utils.Align
+import io.github.chrislo27.rhrefresh.PreferenceKeys
 import io.github.chrislo27.rhrefresh.RHREfresh
 import io.github.chrislo27.rhrefresh.RHREfreshApplication
 import io.github.chrislo27.toolboks.Toolboks
@@ -97,7 +98,8 @@ class CrashScreen(main: RHREfreshApplication, val throwable: Throwable, val last
         stage.elements += label().apply {
             this.location.set(screenY = 0.5f, screenHeight = 0.3f)
             this.fontScaleMultiplier = 0.9f
-            this.text = "${selectedSplash.subtitle}\n\nThe program has crashed, but we're able to display this crash info screen.\nWe've attempted to save your remix (if any) and you should be able to recover it the next time\nyou start the program. " + (if (!RHREfresh.noAnalytics) "An anonymous crash report has also been sent to the developer." else "") + "\nIf you can, take a screenshot of this screen as it contains useful info for the developer.\nConsider submitting a bug report at\n[#8CCFFF]${RHREfresh.GITHUB}/issues/new/choose[]."
+            this.text = "${selectedSplash.subtitle}\n\nThe program has crashed, but we're able to display this crash info screen.\nWe've attempted to save your remix (if any) and you should be able to recover it the next time\nyou start the program. " + (if (main.preferences.getBoolean(
+                    PreferenceKeys.SETTINGS_ENABLE_ANALYTICS)) "An anonymous crash report has also been sent to the developer." else "") + "\nIf you can, take a screenshot of this screen as it contains useful info for the developer.\nConsider submitting a bug report at\n[#8CCFFF]${RHREfresh.GITHUB}/issues/new/choose[]."
         }
 
         stage.elements += label().apply {

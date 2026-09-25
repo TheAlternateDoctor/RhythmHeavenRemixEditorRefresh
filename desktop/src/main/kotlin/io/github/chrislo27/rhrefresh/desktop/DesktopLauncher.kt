@@ -109,8 +109,6 @@ object DesktopLauncher {
                         arguments.eventImmediateXmas -> 3
                         else -> 0
                     }
-                    // RHREfresh.noAnalytics = arguments.noAnalytics
-                    RHREfresh.noAnalytics = true
                     RHREfresh.noOnlineCounter = arguments.noOnlineCounter
                     RHREfresh.outputGeneratedDatamodels = arguments.outputGeneratedDatamodels
                     RHREfresh.outputCustomSfx = arguments.outputCustomSfx

@@ -29,6 +29,7 @@ object PreferenceKeys {
     val SETTINGS_AUDIO_VOLUME = "settings_audioVolume"
     val SETTINGS_NEW_TRACKS_ON_TOP = "settings_newTrackPosition"
     val SETTINGS_ORDER_BY_GAME_ORDER = "settings_chronologicalGameOrder"
+    val SETTINGS_ENABLE_ANALYTICS = "settings_enableAnalytics"
 
     val SETTINGS_LIVE_WAVEFORM = "settings_liveWaveform"
     val SETTINGS_CHORUS_KIDS = "settings_chorusKids"
