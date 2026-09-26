@@ -35,7 +35,8 @@ abstract class Background(val id: String) {
                     kmStripes2,
                     BgData(BTSDSBackground("btsDS"), "Built to Scale DS"),
                     BgData(BTSDSBackground("btsDS2", Color.valueOf("E1E11FFF")), "Built to Scale DS 2"),
-                    BgData(BTSDSBackground("btsDSBlue", Color.valueOf("2963FFFF")), "Built to Scale DS (Blue)")
+                    BgData(BTSDSBackground("btsDSBlue", Color.valueOf("2963FFFF")), "Built to Scale DS (Blue)"),
+                    BgData(StaticBackground("lightningBolting") { AssetRegistry["bg_thunder"] }, "Lightning Bolting")
 //                    BgData(PolyrhythmBackground("polyrhythm"), "Polyrhythm")
                   )
         }

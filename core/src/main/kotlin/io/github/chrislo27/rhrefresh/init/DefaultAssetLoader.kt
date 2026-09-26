@@ -143,7 +143,8 @@ class DefaultAssetLoader : AssetRegistry.IAssetLoader {
         AssetRegistry.loadAsset<Texture>("bg_tapTrial", "images/menu/bg_tapTrial.png", linearTexture())
         AssetRegistry.loadAsset<Texture>("bg_launchparty_objects", "images/menu/launchparty.png", linearTexture())
         AssetRegistry.loadAsset<Texture>("bg_btsds_spritesheet", "images/menu/btsds_spritesheet.png")
-        
+        AssetRegistry.loadAsset<Texture>("bg_thunder", "images/menu/bg_thunder.png")
+
         // play-yan
         AssetRegistry.loadAsset<Texture>("playyan_jumping", "images/playyan/jumping_26.png")
         AssetRegistry.loadAsset<Texture>("playyan_pogo", "images/playyan/pogo.png")
